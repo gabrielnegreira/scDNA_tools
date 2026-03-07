@@ -1,0 +1,14 @@
+.Rproj.user
+.Rhistory
+*.RData*
+.Ruserdata
+*.RDS
+*.rds
+*.json
+.DS_Store
+*.Rproj
+inputs/*
+Project specific/*
+*.pdf
+.Rhistory*
+whitelist.tsv

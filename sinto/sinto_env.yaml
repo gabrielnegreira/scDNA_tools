@@ -1,0 +1,15 @@
+name: sinto
+channels:
+  - bioconda
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pysam >=0.14
+  - scipy
+  - numpy
+  - umi_tools
+  - sinto
+  - art
+ # - samtools
+ # - bedtools
+ # - bwa
