@@ -4,8 +4,6 @@
 #SBATCH --cpus-per-task=64
 #SBATCH --time=48:00:00
 #SBATCH --job-name=CELLRANGER_DNA
-***REMOVED***
-***REMOVED***
 #SBATCH --mail-type=BEGIN,END,FAIL
 
 #this is a simple bash script to run CELLRANGER_DNA in the Vlaams supercomputer.

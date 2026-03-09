@@ -3,8 +3,6 @@
 #SBATCH --ntasks=1 --cpus-per-task=64
 #SBATCH --time=12:00:00
 #SBATCH --job-name=run_sinto
-***REMOVED***
-***REMOVED***
 #SBATCH --mail-type=BEGIN,END,FAIL
 
 #this is a simple bash script to run sinto in the Vlaams supercomputer.

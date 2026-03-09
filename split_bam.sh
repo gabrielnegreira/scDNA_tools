@@ -2,8 +2,6 @@
 #SBATCH --ntasks=1 --cpus-per-task=64
 #SBATCH --time=50:00:00
 #SBATCH --job-name=split_bam
-***REMOVED***
-***REMOVED***
 #SBATCH --mail-type=BEGIN,END,FAIL
 
 # --- modules ---
