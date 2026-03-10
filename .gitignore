@@ -12,3 +12,5 @@ Project specific/*
 *.pdf
 .Rhistory*
 whitelist.tsv
+*.sha256
+*.gzip
