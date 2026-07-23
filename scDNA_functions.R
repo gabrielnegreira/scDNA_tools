@@ -295,7 +295,7 @@ subset_cells <- function(scDNAobj, ...){
 #build_scDNAobj####
 #this function will extract the count_matrix, the cells metadata and the bins metadata from the cnv_data.h5 file from cellranger-dna. 
 #Alternativelly, the count matrix, cells metadata dataframe, and the bins metadata dataframe can be provided directly. In this case they will be combined in a list object with the structure of a scDNAobj. 
-build_scDNAobj <- function(h5, count_matrix = NULL, cells_meta = NULL, bins_meta = NULL, transpose_count_matrix = FALSE, mean_read_length, genome_size){
+build_scDNAobj <- function(h5, count_matrix = NULL, cells_meta = NULL, bins_meta = NULL, transpose_count_matrix = FALSE, mappability_threshold = 0.7){
 
   #if a h5 file is provided, all the other arguments are ignored. 
   if(!missing(h5)){
@@ -331,21 +331,19 @@ build_scDNAobj <- function(h5, count_matrix = NULL, cells_meta = NULL, bins_meta
       missing <- expected[which(!expected %in% colnames(cells_meta))]
       stop(paste("cells_meta dataframe is missing the following columns:", paste(missing, collapse = ", ")))
     }
-    expected <- c("bin", "chromosome", "start", "end", "gc_content", "mappability", "is_mappable")
+    expected <- c("bin", "chromosome", "start", "end", "gc_content", "mappability")
     if(sum(is.na(match(expected, colnames(bins_meta)))) > 0){
       missing <- expected[which(!expected %in% colnames(bins_meta))]
       stop(paste("bins_meta dataframe is missing the following columns:", paste(expected, collapse = ", ")))
     }
   }
   
+  #define mappable bins
+  bins_meta <- bins_meta %>%
+    mutate(is_mappable = mappability > mappability_threshold)
   
   #adding extra information to the cells_meta
   cells_meta$n_reads <- colSums(count_matrix)[rownames(cells_meta)]
-  #calculate effective_depth_of_coverage if not present in cells metadata
-  if(!"effective_depth_of_coverage" %in% colnames(cells_meta)){
-    warning("`effective_depth_of_coverage` not present in the cells metadata. Calculating it now...")
-    cells_meta$effective_depth_of_coverage <- (cells_meta$n_reads*mean_read_length)/genome_size
-  }
   
   #adding extra information to the bins_meta
   bins_meta$mean_raw_counts <- rowMeans(count_matrix)[rownames(bins_meta)]
