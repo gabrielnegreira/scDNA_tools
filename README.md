@@ -146,6 +146,7 @@ A typical workflow is illustrated bellow:
 obj <- tag_true_cells(obj, plot = TRUE)
 ```
 This will use the barcode rank approach to distinguish between true cells and background signal. By default it plots an [interactive plot](images/barcode_rank.html).
+
 <img src="images/barcode_rank.png" alt="Demo" height="300">
 
 2) remove background dropplets from the object
