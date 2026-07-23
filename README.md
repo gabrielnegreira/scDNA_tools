@@ -148,7 +148,7 @@ obj <- tag_true_cells(obj, plot = TRUE)
 ```
 This will use the barcode rank approach to distinguish between true cells and background signal. By default it plots an [interactive plot](images/barcode_rank.html).
 
-<img src="images/barcode_rank.png" alt="Demo" height="300">
+<img src="images/barcode_rank.png" alt="" height="300">
 
 2) remove background dropplets from the object
 ```r
@@ -171,19 +171,19 @@ To visualize somies per cell, we can use the `plot_somies` function:
 ```r
 plot_somies(obj)
 ```
-<img src="images/somy_plot.png" alt="Demo" height="300">
+<img src="images/somy_plot.png" alt="" height="300">
 
 To visualize karyotypes, use `plot_karyotypes`:
 ```r
 plot_karyotypes(obj)
 ```
-<img src="images/karyotypes_plot.png" alt="Demo" height="300">
+<img src="images/karyotypes_plot.png" alt="" height="300">
 
 We can also use `plot_cell` to visualize specific cells:
 ```r
 plot_cell(obj, cell = "GGTCATTGCACCTTGACGCCAATAACATCGTC_2")
 ```
-<img src="images/cell_plot1.png" alt="Demo" height="300">
+<img src="images/cell_plot1.png" alt="" height="300">
 
 If no cell barcode is provided to the function, it will chose a random cell:
 ```r
@@ -191,7 +191,36 @@ set.seed(123)
 plot_cell(obj)
 ```
 
-<img src="images/cell_plot2.png" alt="Demo" height="300">
+<img src="images/cell_plot2.png" alt="" height="300">
+
+You can also use the `plot_cell` function to inspect cells of a particular karyotype. For instance, let's check how a cell with karyotype kar1 looks like:
+
+```r
+set.seed(123)
+plot_cell(obj, karyotype = "kar1")
+```
+
+<img src="images/cell_plot3.png" alt="" height="300">
+
+And here is how a cell with karyotype "kar2" looks like:
+
+```r
+set.seed(321)
+plot_cell(obj, karyotype = "kar2")
+```
+
+<img src="images/cell_plot4.png" alt="" height="300">
+
+This is particularly useful to investigate "weird" karyotypes and confirm if the read counts support the somy estimation. For instance, let's check karyotype kar64, which seems to have a chromosome 5 with 9 copies!
+
+```r
+set.seed(321)
+plot_cell(obj, karyotype = "kar64")
+```
+
+<img src="images/cell_plot5.png" alt="" height="300">
+
+We can see that indeed, the chromosome 5 in that particular cell display an unusual high read count.
 
 ## Accessing results
 The `scDNAobj` is just an R list. So we can navigate through it as any other list. 
