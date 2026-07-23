@@ -1134,18 +1134,24 @@ plot_cell <- function(scDNAobj, cell, karyotype, metadata_to_show = NULL){
       ggtitle("No scale factor determined")
   }
   
-  
-  p3 <- cells_meta %>%
-    mutate(color = ifelse(barcode == cell, "cell", 
-                          ifelse(is_outlier,  "outlier",  "other"))) %>%
-    mutate(color = factor(color, levels = c("cell", "other", "outlier"))) %>%
-    arrange(desc(color)) %>%
-    ggplot(aes(x = ICCV, y = ICF_score, color = color))+
-    geom_point()+
-    guides(color = "none", size = "none")+
-    ggtitle(paste0("Coverage: ", round(cell_meta$effective_depth_of_coverage,2), "x; ICF_score: ", round(cell_meta$ICF_score, 2)))+
-    scale_color_manual(values = c(cell = "red", outlier = "lightgrey", other = "#c9a9a9"))+
-    theme(plot.title = element_text(size = 11))
+  if(outlier_cells_were_tagged){
+    p3 <- cells_meta %>%
+      mutate(color = ifelse(barcode == cell, "cell", 
+                            ifelse(is_outlier,  "outlier",  "other"))) %>%
+      mutate(color = factor(color, levels = c("cell", "other", "outlier"))) %>%
+      arrange(desc(color)) %>%
+      ggplot(aes(x = ICCV, y = ICF_score, color = color))+
+      geom_point()+
+      guides(color = "none", size = "none")+
+      ggtitle(paste0("Coverage: ", round(cell_meta$effective_depth_of_coverage,2), "x; ICF_score: ", round(cell_meta$ICF_score, 2)))+
+      scale_color_manual(values = c(cell = "red", outlier = "lightgrey", other = "#c9a9a9"))+
+      theme(plot.title = element_text(size = 11))
+  }else{
+    p3 <- ggplot()+
+      theme_void()+
+      ggtitle("ICCV and ICF_Scores were not calculated")
+  }
+
   
  
   plot <- (p3+p2)/p1
