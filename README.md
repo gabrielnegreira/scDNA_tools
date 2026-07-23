@@ -158,11 +158,11 @@ obj <- subset_cells(obj, cell_or_background == "cell")
 3) Now do the somy analysis
 ```r
 obj <- tag_outlier_bins(obj) #will append to the bins_meta a flag stating if a bin is an outlier
-obj <- correct_counts(obj, vars_to_correct = "gc_content") #will correct counts based on gc content (here shouldn't matter as gc_content is dummy values)
+obj <- correct_counts(obj, vars_to_correct = "gc_content") #will correct counts based on gc content
 obj <- normalize_counts(obj)
 obj <- calc_cells_ICF(obj)
 obj <- tag_outlier_cells(obj, vars_to_check = c(ICCV = "upper", ICF_score = "upper"))
-obj <- calc_somy(obj, int_method = "round") #for gaussian mixuture models set it to "GMM" (but it might get stuck in a loop sometimes. Need to fix it)
+obj <- calc_somy(obj, int_method = "GMM") #for gaussian mixuture models set it to "GMM" (but it might get stuck in a loop sometimes. Need to fix it). Otherwise, set it to "round".
 obj <- summarise_karyotypes(obj)
 ```
 
