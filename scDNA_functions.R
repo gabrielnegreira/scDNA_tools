@@ -336,6 +336,18 @@ build_scDNAobj <- function(h5, count_matrix = NULL, cells_meta = NULL, bins_meta
       missing <- expected[which(!expected %in% colnames(bins_meta))]
       stop(paste("bins_meta dataframe is missing the following columns:", paste(expected, collapse = ", ")))
     }
+    
+    #add rownames
+    rownames(bins_meta) <- bins_meta$bin
+    rownames(cells_meta) <- cells_meta$barcode
+  }
+  
+  #make sure rownames match corresponding order in count matrix
+  if(any(rownames(cells_meta) != colnames(count_matrix))){
+    stop("cells_meta barcodes do not correspond to colnames of count matrix!")
+  }
+  if(any(rownames(bins_meta) != rownames(count_matrix))){
+    stop("bins_meta bins do not correspond to rownames of count matrix!")
   }
   
   #define mappable bins
@@ -1141,7 +1153,7 @@ plot_cell <- function(scDNAobj, cell, karyotype, metadata_to_show = NULL){
       ggplot(aes(x = ICCV, y = ICF_score, color = color))+
       geom_point()+
       guides(color = "none", size = "none")+
-      ggtitle(paste0("Coverage: ", round(cell_meta$effective_depth_of_coverage,2), "x; ICF_score: ", round(cell_meta$ICF_score, 2)))+
+      ggtitle(paste0("ICF_score: ", round(cell_meta$ICF_score, 2)))+
       scale_color_manual(values = c(cell = "red", outlier = "lightgrey", other = "#c9a9a9"))+
       theme(plot.title = element_text(size = 11))
   }else{
