@@ -120,6 +120,7 @@ A typical `bins_meta` looks like this:
 | Ld02_2  | Ld02       | 20000  | 40000  | 1           | 0,61525    |
 | Ld02_3  | Ld02       | 40000  | 60000  | 1           | 0,64995    |
 | Ld02_4  | Ld02       | 60000  | 80000  | 1           | 0,61535    |
+
 OBS: this can be easily done with the `compute_gc_and_mappability.sh` script from my [WGS_tools](https://github.com/gabrielnegreira/WGS_tools) repository.
 
 OBS2: There is a `bins_meta_example.csv` file  in the repo. To load it use:
