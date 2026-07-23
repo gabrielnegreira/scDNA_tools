@@ -59,9 +59,10 @@ Any scDNAobj object needs at least two objects to be built:
 
 1) A `count_matrix` object, which is a matrix where genomic bins are rows, cells are columns, and values are read counts. It is inspired by the count matrix in [Seurat](https://satijalab.org/seurat/)
       OBS: an example for count matrix is provided in the repo as `count_matrix_example.csv`. To load it use:
-      ```r
-councount_matrix <- as.matrix(read.csv("count_matrix_example.csv", row.names = 1))
-      ```
+      
+```r
+count_matrix <- as.matrix(read.csv("count_matrix_example.csv", row.names = 1))
+```
 
 A typical count matrix looks like this:
 
@@ -138,14 +139,21 @@ obj <- build_scDNAobj(
 
 ## Performing somy analysis
 A typical workflow is illustrated bellow:
+
+1) Start by distinguishing background droplets from true cells
 ```r
-##we start by distinguishing background droplets from true cells
 obj <- tag_true_cells(obj, plot = TRUE)
+```
+This will use the barcode rank approach to distinguish between true cells and background signal. By default it plots an [interactive plot](images/barcode_rank.html).
+<img src="images/barcode_rank.png" alt="Demo" height="300">
 
-##remove background dropplets from the object
+2) remove background dropplets from the object
+```r
 obj <- subset_cells(obj, cell_or_background == "cell")
+```
 
-## now we do the somy analysis
+3) Now do the somy analysis
+```r
 obj <- tag_outlier_bins(obj) #will append to the bins_meta a flag stating if a bin is an outlier
 obj <- correct_counts(obj, vars_to_correct = "gc_content") #will correct counts based on gc content (here shouldn't matter as gc_content is dummy values)
 obj <- normalize_counts(obj)
