@@ -1,13 +1,3 @@
----
-created: 2026-07-23 14:22
-modified: 2026-07-23 15:28
-type: note
-project:
-area:
-organisation:
-people:
-tags:
----
 # Introduction
 This repository contains the main scripts I use for analysis of single-cell DNA data. It is meant for personal use but can be used by anyone interested. 
 
