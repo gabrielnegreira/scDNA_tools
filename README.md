@@ -57,7 +57,8 @@ obj <- build_scDNAobj(h5 = "cellranger_output.h5")
 #### Creating the scDNAobj object from a count matrix:
 Any scDNAobj object needs at least two objects to be built:
 
-1) A `count_matrix` object, which is a matrix where genomic bins are rows, cells are columns, and values are read counts. It is inspired by the count matrix in [Seurat](https://satijalab.org/seurat/)
+1) A `count_matrix` object, which is a matrix where genomic bins are rows, cells are columns, and values are read counts. It is inspired by the count matrix in [Seurat](https://satijalab.org/seurat/).
+      
       OBS: an example for count matrix is provided in the repo as `count_matrix_example.csv`. To load it use:
       
 ```r
