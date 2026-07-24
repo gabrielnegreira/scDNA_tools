@@ -905,7 +905,7 @@ summarise_karyotypes <- function(scDNAobj, ignore_outlier_cells = TRUE){
   #set the cells karyotypes to the karyo_id instead
   cells_meta$karyotype <- NA
   cells_meta[rownames(cells),]$karyotype <- cells$karyotype
-  cells_meta$karyotype <- karyo_list$karyo_id[match(cells_meta$karyotype, karyo_list$karyotype)]
+  cells_meta$karyo_id <- karyo_list$karyo_id[match(cells_meta$karyotype, karyo_list$karyotype)]
   
   #return the objects
   scDNAobj$karyotypes$karyo_list <- karyo_list
