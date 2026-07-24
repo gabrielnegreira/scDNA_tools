@@ -91,12 +91,12 @@ A typical count matrix looks like this:
 | **Ld02_4**  | 10                                 | 7                                  | 8                                  | 12                                 |
 
 2) A `bins_meta` data frame. This is a data frame containing relevant information about the genomic bins such as GC content, mapability, etc. It should have the following columns:
-	- `bin`: string - the id of the bin. It should match the row names of the count matrix.
-    - `chromosome`: string - indicates to which chromosome (or contig) the bin belongs.
-    - `start`: integer - the position in the chromosome/contig at which the bin starts. 
-    - `end`: integer - the position in the chromosome/contig at which the bin ends.
-    - `mappability`: numeric - indicates the ratio between uniquely mapped reads over total mapped reads in each bin.
-    - `gc_content`: numeric - indicates the percentage of GC bases in the bin (between 0 to 1).
+	- `bin`- string (required): the id of the bin. It should match the row names of the count matrix.
+    - `chromosome`- string (required): indicates to which chromosome (or contig) the bin belongs.
+    - `start`- integer (optional): the position in the chromosome/contig at which the bin starts. 
+    - `end`- integer (optional): the position in the chromosome/contig at which the bin ends.
+    - `mappability`- numeric (required): indicates the ratio between uniquely mapped reads over total mapped reads in each bin.
+    - `gc_content`- numeric (required): indicates the percentage of GC bases in the bin (between 0 to 1).
 
 A typical `bins_meta` looks like this:
 
@@ -130,7 +130,7 @@ bins_meta <- read.csv("bins_meta_example.csv")
 ```
 
 3) (Optional) a `cells_meta` data frame. This is used to store per-cell metrics and metadata. If not provided, it will be created automatically by the `build_scDNAobj` function. It should contain at least one column:
-- `barcode`: string: a cell barcode which should match the column names in the count matrix.
+- `barcode`- string: a cell barcode which should match the column names in the count matrix.
 
 To create the object just do:
 ```r

@@ -331,7 +331,7 @@ build_scDNAobj <- function(h5, count_matrix = NULL, cells_meta = NULL, bins_meta
       missing <- expected[which(!expected %in% colnames(cells_meta))]
       stop(paste("cells_meta dataframe is missing the following columns:", paste(missing, collapse = ", ")))
     }
-    expected <- c("bin", "chromosome", "start", "end", "gc_content", "mappability")
+    expected <- c("bin", "chromosome", "gc_content", "mappability")
     if(sum(is.na(match(expected, colnames(bins_meta)))) > 0){
       missing <- expected[which(!expected %in% colnames(bins_meta))]
       stop(paste("bins_meta dataframe is missing the following columns:", paste(missing, collapse = ", ")))
