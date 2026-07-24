@@ -1656,3 +1656,40 @@ pull_and_bind <- function(list, to_pull){
    return(retrieved_data)
 }
 
+#subsample_reads
+##this function will subsample the raw count matrix to a given number of total reads. 
+subsample_reads <- function(scDNAobj, target_total){
+  counts <- scDNAobj$counts$raw_counts
+  if(min(colSums(counts)) < target_total){
+    warning("some cells have less than `target_total` counts. These cells will be skipped.")
+  }
+  counts[,] <- apply(counts, 2, function(x){
+    #deal with 0.5 values
+    if(any(x %% 1 != 0)){
+      multiplier <- 2L
+    }else{
+      multiplier <- 1L
+    }
+    x[] <- as.integer(x*multiplier)
+    target_total <- target_total*multiplier
+    total <- sum(x)
+    if(total < target_total){
+      x <- x/multiplier
+      return(x)
+    }else{
+      sampled_bins <- rep(names(x), times = x) #this creates a vector where each bin is repeated by their respecitive number of reads
+      sampled_bins <- sample(sampled_bins, size = target_total, replace = FALSE) #this will sample the bins down to the target number of reads.
+      sampled_bins <- table(factor(sampled_bins, levels = names(x))) #this will count how many times each bin was sampled. Factor preserves bins with 0 counts originally.  
+      sampled_bins <- sampled_bins/multiplier
+      return(sampled_bins)
+    }
+  })
+  scDNAobj$counts$raw_counts <- counts
+  
+  #update metadata
+  scDNAobj$metadata$bins_meta$original_mean_raw_counts <- scDNAobj$metadata$bins_meta$mean_raw_counts
+  scDNAobj$metadata$bins_meta$mean_raw_counts <- rowMeans(counts)[rownames(scDNAobj$metadata$bins_meta)]
+  scDNAobj$metadata$cells_meta$original_n_reads <- scDNAobj$metadata$cells_meta$n_reads
+  scDNAobj$metadata$cells_meta$n_reads <- colSums(counts)[rownames(scDNAobj$metadata$cells_meta)]
+  return(scDNAobj)
+}
