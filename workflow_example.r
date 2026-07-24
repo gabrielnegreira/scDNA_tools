@@ -63,7 +63,7 @@ obj <- summarise_karyotypes(obj)
 #Visualize results####
 ##visualize somies####
 ## to visualize somies we can use the `plot_somies` function
-plot_somies(obj), matrix_to_plot = "int_somy_matrix")
+plot_somies(obj, matrix_to_plot = "int_somy_matrix")
 
 ##visualize individual cells####
 ## we can use the `plot_cell` function to visualize a specific cell in an object

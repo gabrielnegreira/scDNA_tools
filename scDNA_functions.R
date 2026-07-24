@@ -550,8 +550,11 @@ calc_cells_ICF <- function(scDNAobj, ICF_loess_span = 0.75, max_chromo = 5){
   
   #save the ICF models in the scDNA object
   ICF_models <- list()
+  cells_meta$raw_ICF_score <- NA
   cells_meta$ICF_score <- NA
   cells_meta$ICCV <- NA
+  cells_meta$is_outlier_ICF_score <- NA
+  cells_meta$is_outlier_ICCV <- NA
   cat("Making ICF models...\n")
   pb <- txtProgressBar(min = 3, max = ncol(count_matrix))
   for(i in c(3:ncol(count_matrix))){
@@ -579,8 +582,8 @@ calc_cells_ICF <- function(scDNAobj, ICF_loess_span = 0.75, max_chromo = 5){
     ICF_models[[cell]]$matrix_used <- matrix_to_use
     ICF_models[[cell]]$model_data <- model_data
     ICF_models[[cell]]$loess_span <- ICF_loess_span
-    cells_meta[cell,]$ICF_score <- ICF_score
-    cells_meta[cell,]$ICCV <- mean(unique(model_data$ICCV), na.rm = TRUE)
+    cells_meta[cell, "ICF_score"] <- ICF_score
+    cells_meta[cell, "ICCV"] <- mean(unique(model_data$ICCV), na.rm = TRUE)
   }
   cat("\n")
   
@@ -592,14 +595,21 @@ calc_cells_ICF <- function(scDNAobj, ICF_loess_span = 0.75, max_chromo = 5){
   gam_model <- mgcv::gam(formula = ICF_score ~ ICCV, data = to_model)
   
   #now extrapolate the model to all cells
-  cells_meta$gam_fit <- predict(gam_model, cells_meta[,"ICCV", drop = FALSE])
+  predict_data <- cells_meta[,c("barcode", "ICCV"), drop = FALSE] %>%
+    mutate(gam_fit = as.numeric(predict(gam_model, .))) %>%
+    rownames_to_column("rowname") %>%
+    left_join(cells_meta %>% select(barcode, ICF_score), by = "barcode") %>%
+    rename(raw_ICF_score = ICF_score) %>%
+    mutate(ICF_score = raw_ICF_score * median(gam_fit)/gam_fit) %>%
+    column_to_rownames("rowname")
   
   #calculate a correction factor and use it to fix the ICF_score
   cells_meta <- cells_meta %>%
-    mutate(raw_ICF_score = ICF_score) %>%
-    mutate(ICF_score = raw_ICF_score * median(gam_fit)/gam_fit)
-  
-  cells_meta$gam_fit <- NULL
+    select(-ICCV, - ICF_score, - raw_ICF_score) %>%
+    rownames_to_column("rowname") %>%
+    left_join(predict_data %>% select(barcode, ICCV, raw_ICF_score, ICF_score), by = "barcode") %>%
+    column_to_rownames("rowname")
+    
   #store the outputs in the scDNAobject
   scDNAobj$models$ICF_models <- ICF_models
   scDNAobj$metadata$cells_meta <- cells_meta
