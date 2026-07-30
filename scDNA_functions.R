@@ -1703,3 +1703,42 @@ subsample_reads <- function(scDNAobj, target_total){
   scDNAobj$metadata$cells_meta$n_reads <- colSums(counts)[rownames(scDNAobj$metadata$cells_meta)]
   return(scDNAobj)
 }
+
+#calc_mapd####
+#function to calculate mapd for cells. it will append two columns to the cells metadata ()
+calc_mapd <- function(scDNAobj){
+  
+  #get the count matrix (the matrix to use will depend on if counts were corrected or not)
+  matrix_to_use <- c("normalized_counts", "corrected_counts", "raw_counts") #order determines the priority
+  matrix_to_use <- matrix_to_use[which(matrix_to_use %in% names(scDNAobj$counts))][1]
+  count_matrix <- scDNAobj$counts[[matrix_to_use]]
+  message(paste("using", matrix_to_use, "matrix to calculate cells' MAPD..."))
+  
+  #get the needed metadatas
+  bins_meta <- scDNAobj$metadata$bins_meta
+  cells_meta <- scDNAobj$metadata$cells_meta
+  
+  #create internal function to calculate mapd on a vector
+  calc_mapd_vec <-  function(x){
+    x <- abs(x[2:length(x)] - x[1:(length(x)-1)])
+    x <- median(x)
+    return(x)
+  }
+  
+  #calculate raw_mapds
+  cells_meta$raw_mapd <- apply(count_matrix, 2, calc_mapd_vec)[rownames(cells_meta)]
+  
+  #now normalize the reads per chromosome to remove the effect of aneuploidy on mapd (otherwise more aneuploid cells will have higher mapds)
+  for(chromo in unique(bins_meta$chromosome)){
+    bins <- bins_meta %>%
+      filter(chromosome == chromo) %>%
+      pull(bin)
+    count_matrix[bins,] <- apply(count_matrix[bins,], 2, normalize, method = "mean")
+  }
+  
+  #calculate chromo_norm_mapd
+  cells_meta$chromo_norm_mapd <- apply(count_matrix, 2, calc_mapd_vec)[rownames(cells_meta)]
+  
+  scDNAobj$metadata$cells_meta <- cells_meta
+  return(scDNAobj)
+}
