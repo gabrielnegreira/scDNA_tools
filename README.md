@@ -1,5 +1,5 @@
 # Introduction
-This repository contains the main scripts I use for analysis of single-cell DNA data. It is meant for personal use but can be used by anyone interested. 
+This repository contains the main scripts I use for analysis of single-cell DNA data.
 
 # Usage
 
