@@ -146,7 +146,7 @@ A typical workflow is illustrated bellow:
 ```r
 obj <- tag_true_cells(obj, plot = TRUE)
 ```
-This will use the barcode rank approach to distinguish between true cells and background signal. By default it plots an [interactive plot](images/barcode_rank.html).
+This will use the barcode rank approach to distinguish between true cells and background signal. By default it plots an interactive plot.
 
 <img src="images/barcode_rank.png" alt="" height="300">
 
